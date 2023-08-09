@@ -79,10 +79,11 @@ print('Not included features',
       set(best_features).symmetric_difference(set(X.columns)))
 
 # Choosing the 25 best features (Forward feature selection model)
-ffs_best_features = ffs.forward_feature_selection(X, y_log, verbose=0, number=25)
+ffs_best_features = ffs.forward_feature_selection(X, y_log,
+                                                  verbose=0, number=25)
 
 print('FFS best features:', ffs_best_features)
-print('Not included features', 
+print('Not included features',
       set(ffs_best_features).symmetric_difference(set(X.columns)))
 
 X_train_ffs = X_train[ffs_best_features]
@@ -99,7 +100,9 @@ X_valid_scaled_ffs = scaler.transform(X_valid_ffs)
 # Save data
 np.savetxt('artifacts/X_train_scaled_k.csv', X_train_scaled_k, delimiter=",")
 np.savetxt('artifacts/X_valid_scaled_k.csv', X_valid_scaled_k, delimiter=",")
-np.savetxt('artifacts/X_train_scaled_ffs.csv', X_train_scaled_ffs, delimiter=",")
-np.savetxt('artifacts/X_valid_scaled_ffs.csv', X_valid_scaled_ffs, delimiter=",")
+np.savetxt('artifacts/X_train_scaled_ffs.csv',
+           X_train_scaled_ffs, delimiter=",")
+np.savetxt('artifacts/X_valid_scaled_ffs.csv',
+           X_valid_scaled_ffs, delimiter=",")
 y_train_log.to_csv('artifacts/y_train_log.csv', index=False)
 y_valid_log.to_csv('artifacts/y_valid_log.csv', index=False)

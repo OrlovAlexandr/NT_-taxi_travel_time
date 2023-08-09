@@ -20,5 +20,9 @@ y_train_pred_k = gb.predict(X_train_scaled_k)
 y_valid_pred_k = gb.predict(X_valid_scaled_k)
 
 # Display metrics
-print('RMSLE on the training set:', round(np.sqrt(metrics.mean_squared_error(y_train_log, y_train_pred_k)), 2))
-print('RMSLE on the validation set:', round(np.sqrt(metrics.mean_squared_error(y_valid_log, y_valid_pred_k)), 2))
+print('RMSLE on the training set:',
+      round(np.sqrt(metrics.mean_squared_error(y_train_log, y_train_pred_k)),
+            2))
+print('RMSLE on the validation set:',
+      round(np.sqrt(metrics.mean_squared_error(y_valid_log, y_valid_pred_k)),
+            2))

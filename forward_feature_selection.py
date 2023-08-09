@@ -5,7 +5,8 @@ from scipy.stats import f
 from sklearn.linear_model import LinearRegression
 
 
-def forward_feature_selection(factors, response, sig_level=0.05, verbose=0, number=25):
+def forward_feature_selection(factors, response, sig_level=0.05,
+                              verbose=0, number=25):
     model = LinearRegression()
 
     sample_size = len(response)
@@ -32,7 +33,8 @@ def forward_feature_selection(factors, response, sig_level=0.05, verbose=0, numb
 
         df_rmf = 1
         df_full = sample_size - len(factors_to_test) - 1
-        f_stat = ((restricted_sse - full_sse[factor_candidate]) / df_rmf) / (full_sse[factor_candidate] / df_full)
+        f_stat = ((restricted_sse - full_sse[factor_candidate]) / df_rmf) / \
+                 (full_sse[factor_candidate] / df_full)
 
         p_value = 1 - f.cdf(f_stat, df_rmf, df_full)
 
