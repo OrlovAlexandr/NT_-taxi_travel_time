@@ -4,7 +4,7 @@ from sklearn import model_selection
 from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 
-import forward_feature_selection as ffs
+# import forward_feature_selection as ffs
 
 # Read dataset
 taxi_data = pd.read_csv("artifacts/taxi_data_df.csv")
@@ -77,7 +77,7 @@ X_valid_k = X_valid[best_features]
 print('KBest features:', best_features)
 print('Not included features',
       set(best_features).symmetric_difference(set(X.columns)))
-
+'''
 # Choosing the 25 best features (Forward feature selection model)
 ffs_best_features = ffs.forward_feature_selection(X, y_log,
                                                   verbose=0, number=25)
@@ -88,21 +88,24 @@ print('Not included features',
 
 X_train_ffs = X_train[ffs_best_features]
 X_valid_ffs = X_valid[ffs_best_features]
-
+'''
 # Scaling feature values
 scaler = MinMaxScaler()
 X_train_scaled_k = scaler.fit_transform(X_train_k)
 X_valid_scaled_k = scaler.transform(X_valid_k)
 
-X_train_scaled_ffs = scaler.fit_transform(X_train_ffs)
-X_valid_scaled_ffs = scaler.transform(X_valid_ffs)
+# X_train_scaled_ffs = scaler.fit_transform(X_train_ffs)
+# X_valid_scaled_ffs = scaler.transform(X_valid_ffs)
 
 # Save data
 np.savetxt('artifacts/X_train_scaled_k.csv', X_train_scaled_k, delimiter=",")
 np.savetxt('artifacts/X_valid_scaled_k.csv', X_valid_scaled_k, delimiter=",")
-np.savetxt('artifacts/X_train_scaled_ffs.csv',
-           X_train_scaled_ffs, delimiter=",")
-np.savetxt('artifacts/X_valid_scaled_ffs.csv',
-           X_valid_scaled_ffs, delimiter=",")
+# np.savetxt('artifacts/X_train_scaled_ffs.csv',
+#            X_train_scaled_ffs, delimiter=",")
+# np.savetxt('artifacts/X_valid_scaled_ffs.csv',
+#            X_valid_scaled_ffs, delimiter=",")
 y_train_log.to_csv('artifacts/y_train_log.csv', index=False)
 y_valid_log.to_csv('artifacts/y_valid_log.csv', index=False)
+
+print('-' * 79 + '\n')
+print('Data preprocessing is finished!')

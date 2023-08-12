@@ -24,5 +24,8 @@ gb = GradientBoostingRegressor(
 gb.fit(X_train_scaled_k, y_train_log)
 
 # Save the model to a file
-with open("gb_k_model.pkl", "wb") as f:
+with open("artifacts/gb_k_model.pkl", "wb") as f:
     pickle.dump(gb, f)
+
+print('-' * 79 + '\n')
+print('Model preparation is finished!')
