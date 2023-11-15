@@ -1,0 +1,7 @@
+[core]
+    remote = ssh-storage
+['remote "ssh-storage"']
+    url = ssh://data_srv@192.168.56.101/opt/ny_taxi_data
+    password = 0000
+    user = alex
+    port = 22

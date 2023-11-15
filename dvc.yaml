@@ -1,0 +1,19 @@
+stages:
+  get-features:
+    cmd: python3 scripts/data_scripts/get_features.py data/raw/train.csv data/raw/holiday_data.csv
+      data/raw/osrm_data_train.zip data/raw/weather_data.zip
+    deps:
+    - data/raw/holiday_data.csv
+    - data/raw/osrm_data_train.zip
+    - data/raw/train.csv
+    - data/raw/weather_data.zip
+    - scripts/data_scripts/get_features.py
+    outs:
+    - data/stage1
+  clean-features:
+    cmd: python3 scripts/data_scripts/clean_features.py data/stage1/taxi_dataset.csv
+    deps:
+    - data/stage1/taxi_dataset.csv
+    - scripts/data_scripts/clean_features.py
+    outs:
+    - data/stage2
