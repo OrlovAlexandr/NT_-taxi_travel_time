@@ -11,9 +11,25 @@ stages:
     outs:
     - data/stage1
   clean-features:
-    cmd: python3 scripts/data_scripts/clean_features.py data/stage1/taxi_dataset.csv
+    cmd: python3 scripts/data_scripts/clean_features.py data/stage1/taxi_dataset.ftr
     deps:
-    - data/stage1/taxi_dataset.csv
+    - data/stage1/taxi_dataset.ftr
     - scripts/data_scripts/clean_features.py
     outs:
     - data/stage2
+  ohe:
+    cmd: python3 scripts/data_scripts/ohe.py data/stage2/dataset_cleaned.ftr
+    deps:
+    - data/stage2/dataset_cleaned.ftr
+    - scripts/data_scripts/ohe.py
+    outs:
+    - data/stage3
+  best-features:
+    cmd: python3 scripts/data_scripts/best_features.py data/stage3/dataset_ohe.ftr
+    deps:
+    - data/stage3/dataset_ohe.ftr
+    - scripts/data_scripts/best_features.py
+    params:
+    - kbest.n_kbest
+    outs:
+    - data/stage4

@@ -1,0 +1,9 @@
+kbest:
+  n_kbest: 25
+
+split:
+  split_ratio: 0.33
+
+train:
+  seed: 42
+  max_depth: 3

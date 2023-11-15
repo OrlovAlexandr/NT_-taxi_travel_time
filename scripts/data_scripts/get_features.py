@@ -20,7 +20,7 @@ print('osrm_path', osrm_path)
 print('weather_path', weather_path)
 
 
-f_output = os.path.join("data", "stage1", "taxi_dataset.csv")
+f_output = os.path.join("data", "stage1", "taxi_dataset.ftr")
 os.makedirs(os.path.join("data", "stage1"), exist_ok=True)
 
 taxi_data = pd.read_csv(train_path)
@@ -83,4 +83,5 @@ avg_speed = taxi_data['total_distance'] / taxi_data['trip_duration'] * 3.6
 taxi_data = taxi_data[avg_speed <= 300]
 
 # Saving dataframe to file
-taxi_data.to_csv(f_output, index=False)
+# taxi_data.to_feather(f_output)
+taxi_data.reset_index().iloc[:, 1:].to_feather(f_output)
