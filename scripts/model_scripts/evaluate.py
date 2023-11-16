@@ -42,24 +42,24 @@ with open(sys.argv[3], "rb") as f:
 y_train_pred = model.predict(X_train)
 y_test_pred = model.predict(X_test)
 
-score = model.score(X_test, y_test)
-print('score:', score)
-
-# Display metrics
+# Metrics
+score = round(model.score(X_test, y_test), 4)
 train_rmsle = round(
     np.sqrt(
         metrics.mean_squared_error(y_train, y_train_pred)
-    ), 
-    2)
+    ),
+    4)
 
 test_rmsle = round(
     np.sqrt(
         metrics.mean_squared_error(y_test, y_test_pred)
     ),
-    2)
+    4)
 
+# Display metrics
+print('score:', score)
 print('RMSLE on the train set:', train_rmsle)
 print('RMSLE on the test set:', test_rmsle)
 
 with open(f_output, "w") as fd:
-    json.dump({"score": score}, fd)
+    json.dump({"score": score, "RMSLE_train": train_rmsle, "RMSLE_test": test_rmsle}, fd)

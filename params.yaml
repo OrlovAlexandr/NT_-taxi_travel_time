@@ -6,8 +6,8 @@ split:
   random_state: 42
 
 train:
-  rate: 0.5
-  iterations: 10
+  rate: 0.05
+  iterations: 500
   seed: 42
-  max_depth: 3
+  max_depth: 4
 
