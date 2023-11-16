@@ -39,14 +39,15 @@ print('The number of K Best features:', n_kbest)
 k_best = SelectKBest(score_func=f_regression, k=n_kbest)
 k_best.fit_transform(X, y_log)
 
-# List of chosen features
+# Lists of the chosen and the excluded features
 best_features = k_best.get_feature_names_out()
-
-data = X[best_features]
+excluded_features = set(best_features).symmetric_difference(set(X.columns))
 
 print('KBest features:', best_features)
-print('Not included features',
-      set(best_features).symmetric_difference(set(X.columns)))
+print('Not included features', excluded_features)
+
+# Drop excluded features
+data = data.drop(excluded_features, axis=1)
 
 # Saving dataframe to file
 data.to_feather(f_output)

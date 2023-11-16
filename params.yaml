@@ -3,7 +3,11 @@ kbest:
 
 split:
   split_ratio: 0.33
+  random_state: 42
 
 train:
+  rate: 0.5
+  iterations: 10
   seed: 42
   max_depth: 3
+

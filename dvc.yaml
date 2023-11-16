@@ -33,3 +33,37 @@ stages:
     - kbest.n_kbest
     outs:
     - data/stage4
+  split:
+    cmd: python3 scripts/data_scripts/train_test_split.py data/stage4/best_features.ftr
+    deps:
+    - data/stage4/best_features.ftr
+    - scripts/data_scripts/train_test_split.py
+    params:
+    - split.random_state
+    - split.split_ratio
+    outs:
+    - data/stage5
+  train:
+    cmd: python3 scripts/model_scripts/model_train.py data/stage5/train.npz model_gbr.pkl
+    deps:
+    - data/stage5/train.npz
+    - scripts/model_scripts/model_train.py
+    params:
+    - train.iterations
+    - train.max_depth
+    - train.rate
+    - train.seed
+    outs:
+    - models
+
+  evaluate:
+    cmd: python3 scripts/model_scripts/evaluate.py data/stage5/train.npz data/stage5/test.npz
+      models/model_gbr.pkl
+    deps:
+    - data/stage5/test.npz
+    - data/stage5/train.npz
+    - models/model_gbr.pkl
+    - scripts/model_scripts/evaluate.py
+    metrics:
+    - evaluate/score_gbr.json:
+        cache: false
