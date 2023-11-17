@@ -1,0 +1,172 @@
+schema: '2.0'
+stages:
+  get-features:
+    cmd: python3 scripts/data_scripts/get_features.py data/raw/train.csv data/raw/holiday_data.csv
+      data/raw/osrm_data_train.zip data/raw/weather_data.zip
+    deps:
+    - path: data/raw/holiday_data.csv
+      hash: md5
+      md5: 33bd8d5f6f2ba8d00e2ce66ed0a9f510
+      size: 508
+    - path: data/raw/osrm_data_train.zip
+      hash: md5
+      md5: 41da72f0e483eb95794a8b6431dcaf15
+      size: 179396930
+    - path: data/raw/train.csv
+      hash: md5
+      md5: e59c291a4b1c640f1dab33b89daa22e1
+      size: 200589097
+    - path: data/raw/weather_data.zip
+      hash: md5
+      md5: 0f6abf84673975634c33b0689851e8cc
+      size: 134486
+    - path: scripts/data_scripts/get_features.py
+      hash: md5
+      md5: 8b66e3b08da3b81fd8c307eb1dd635ad
+      size: 3137
+    outs:
+    - path: data/stage1
+      hash: md5
+      md5: 0400ead817ca8fdf40851665d0d08a60.dir
+      size: 154275554
+      nfiles: 1
+  clean-features:
+    cmd: python3 scripts/data_scripts/clean_features.py data/stage1/taxi_dataset.ftr
+    deps:
+    - path: data/stage1/taxi_dataset.ftr
+      hash: md5
+      md5: 00e68fb67bf2563bc6bd2ef288a3b6a8
+      size: 154275554
+    - path: scripts/data_scripts/clean_features.py
+      hash: md5
+      md5: c500ef33014f1237300e8a2c93cb3440
+      size: 1139
+    outs:
+    - path: data/stage2
+      hash: md5
+      md5: b6230a950c0a87da076d53c7e3f4cfc9.dir
+      size: 104901642
+      nfiles: 1
+  ohe-features:
+    cmd: python3 scripts/data_scripts/ohe_features.py data/stage2/dataset_cleaned.csv
+    deps:
+    - path: data/stage2/dataset_cleaned.csv
+      hash: md5
+      md5: dea79e9da7e42d287dd202b858433944
+      size: 242582191
+    - path: scripts/data_scripts/ohe_features.py
+      hash: md5
+      md5: 5ffa80f2005858e756b3326efcfd0ee1
+      size: 1266
+    outs:
+    - path: data/stage3
+      hash: md5
+      md5: 898c1ca71704b009be6445cd738deeb1.dir
+      size: 339966644
+      nfiles: 1
+  ohe:
+    cmd: python3 scripts/data_scripts/ohe.py data/stage2/dataset_cleaned.ftr
+    deps:
+    - path: data/stage2/dataset_cleaned.ftr
+      hash: md5
+      md5: 2d8765516aa2edcf288c0e8d7c415bc3
+      size: 104901642
+    - path: scripts/data_scripts/ohe.py
+      hash: md5
+      md5: 4fd9db612e313427acf750e7310a433b
+      size: 1585
+    outs:
+    - path: data/stage3
+      hash: md5
+      md5: 068438afd0d3285e2a6c2f30e157b9ba.dir
+      size: 101319802
+      nfiles: 1
+  best-features:
+    cmd: python3 scripts/data_scripts/best_features.py data/stage3/dataset_ohe.ftr
+    deps:
+    - path: data/stage3/dataset_ohe.ftr
+      hash: md5
+      md5: af5fe4f99ee3911c45baab3e77cf22c2
+      size: 101319802
+    - path: scripts/data_scripts/best_features.py
+      hash: md5
+      md5: 1ee6827cd2dccc2c7be2a158ce6dcfde
+      size: 1787
+    params:
+      params.yaml:
+        kbest.n_kbest: 25
+    outs:
+    - path: data/stage4
+      hash: md5
+      md5: 889fbbc0180c8002021aef1494d3fb0c.dir
+      size: 87679170
+      nfiles: 1
+  split:
+    cmd: python3 scripts/data_scripts/train_test_split.py data/stage4/best_features.ftr
+    deps:
+    - path: data/stage4/best_features.ftr
+      hash: md5
+      md5: d8b5911e05fb093f57bd9080a03affb9
+      size: 87679170
+    - path: scripts/data_scripts/train_test_split.py
+      hash: md5
+      md5: 2c717a3493d1249581baa555544ed969
+      size: 1968
+    params:
+      params.yaml:
+        split.random_state: 42
+        split.split_ratio: 0.33
+    outs:
+    - path: data/stage5
+      hash: md5
+      md5: 249eb6af7282d30814cf2293e7e6c9e2.dir
+      size: 303313488
+      nfiles: 2
+  train:
+    cmd: python3 scripts/model_scripts/model_train.py data/stage5/train.npz model_gbr.pkl
+    deps:
+    - path: data/stage5/train.npz
+      hash: md5
+      md5: 35a03b1fd97396a9a6ee264142980877
+      size: 203219842
+    - path: scripts/model_scripts/model_train.py
+      hash: md5
+      md5: 8c6b9aa5f88e6f870882ceda739ccfd0
+      size: 1504
+    params:
+      params.yaml:
+        train.iterations: 500
+        train.max_depth: 4
+        train.rate: 0.05
+        train.seed: 42
+    outs:
+    - path: models
+      hash: md5
+      md5: d8e93873a89cadc41bec7f0b593e2c90.dir
+      size: 1183560
+      nfiles: 1
+  evaluate:
+    cmd: python3 scripts/model_scripts/evaluate.py data/stage5/train.npz data/stage5/test.npz
+      models/model_gbr.pkl
+    deps:
+    - path: data/stage5/test.npz
+      hash: md5
+      md5: 149baf1277982286af32ccff983fec03
+      size: 100093646
+    - path: data/stage5/train.npz
+      hash: md5
+      md5: 35a03b1fd97396a9a6ee264142980877
+      size: 203219842
+    - path: models/model_gbr.pkl
+      hash: md5
+      md5: 0eb9a4ae0fceb6416a8155bc08d9d595
+      size: 1183560
+    - path: scripts/model_scripts/evaluate.py
+      hash: md5
+      md5: 75d75b8c4e14335260c20c2ab6e4eb62
+      size: 1846
+    outs:
+    - path: evaluate/score_gbr.json
+      hash: md5
+      md5: 6f067788828cfcd77c217abfbc48821a
+      size: 62
