@@ -1,0 +1,13 @@
+kbest:
+  n_kbest: 25
+
+split:
+  split_ratio: 0.33
+  random_state: 42
+
+train:
+  rate: 0.05
+  iterations: 500
+  seed: 42
+  max_depth: 4
+

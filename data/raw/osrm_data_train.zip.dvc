@@ -1,0 +1,5 @@
+outs:
+- md5: 41da72f0e483eb95794a8b6431dcaf15
+  size: 179396930
+  hash: md5
+  path: osrm_data_train.zip

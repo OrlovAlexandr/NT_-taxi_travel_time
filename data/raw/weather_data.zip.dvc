@@ -1,0 +1,5 @@
+outs:
+- md5: 0f6abf84673975634c33b0689851e8cc
+  size: 134486
+  hash: md5
+  path: weather_data.zip

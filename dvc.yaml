@@ -1,0 +1,69 @@
+stages:
+  get-features:
+    cmd: python3 scripts/data_scripts/get_features.py data/raw/train.csv data/raw/holiday_data.csv
+      data/raw/osrm_data_train.zip data/raw/weather_data.zip
+    deps:
+    - data/raw/holiday_data.csv
+    - data/raw/osrm_data_train.zip
+    - data/raw/train.csv
+    - data/raw/weather_data.zip
+    - scripts/data_scripts/get_features.py
+    outs:
+    - data/stage1
+  clean-features:
+    cmd: python3 scripts/data_scripts/clean_features.py data/stage1/taxi_dataset.ftr
+    deps:
+    - data/stage1/taxi_dataset.ftr
+    - scripts/data_scripts/clean_features.py
+    outs:
+    - data/stage2
+  ohe:
+    cmd: python3 scripts/data_scripts/ohe.py data/stage2/dataset_cleaned.ftr
+    deps:
+    - data/stage2/dataset_cleaned.ftr
+    - scripts/data_scripts/ohe.py
+    outs:
+    - data/stage3
+  best-features:
+    cmd: python3 scripts/data_scripts/best_features.py data/stage3/dataset_ohe.ftr
+    deps:
+    - data/stage3/dataset_ohe.ftr
+    - scripts/data_scripts/best_features.py
+    params:
+    - kbest.n_kbest
+    outs:
+    - data/stage4
+  split:
+    cmd: python3 scripts/data_scripts/train_test_split.py data/stage4/best_features.ftr
+    deps:
+    - data/stage4/best_features.ftr
+    - scripts/data_scripts/train_test_split.py
+    params:
+    - split.random_state
+    - split.split_ratio
+    outs:
+    - data/stage5
+  train:
+    cmd: python3 scripts/model_scripts/model_train.py data/stage5/train.npz model_gbr.pkl
+    deps:
+    - data/stage5/train.npz
+    - scripts/model_scripts/model_train.py
+    params:
+    - train.iterations
+    - train.max_depth
+    - train.rate
+    - train.seed
+    outs:
+    - models
+
+  evaluate:
+    cmd: python3 scripts/model_scripts/evaluate.py data/stage5/train.npz data/stage5/test.npz
+      models/model_gbr.pkl
+    deps:
+    - data/stage5/test.npz
+    - data/stage5/train.npz
+    - models/model_gbr.pkl
+    - scripts/model_scripts/evaluate.py
+    metrics:
+    - evaluate/score_gbr.json:
+        cache: false
