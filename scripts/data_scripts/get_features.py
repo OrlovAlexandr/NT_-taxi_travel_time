@@ -16,20 +16,19 @@ train_path = sys.argv[1]
 holiday_path = sys.argv[2]
 osrm_path = sys.argv[3]
 weather_path = sys.argv[4]
-print('train_path', train_path)
-print('holiday_path', holiday_path)
-print('osrm_path', osrm_path)
-print('weather_path', weather_path)
+print('train_path:', train_path)
+print('holiday_path:', holiday_path)
+print('osrm_path:', osrm_path)
+print('weather_path:', weather_path)
 
 # Set output path for the final dataset
 f_output = os.path.join("data", "stage1", "taxi_dataset.ftr")
 os.makedirs(os.path.join("data", "stage1"), exist_ok=True)
 
-# Convert the 'pickup_datetime' column to datetime format
+# Read the main dataset
 taxi_data = pd.read_csv(train_path)
-print('Train data shape: {}'.format(taxi_data.shape))
 
-# Convert to datetime
+# Convert the 'pickup_datetime' column to datetime format
 taxi_data['pickup_datetime'] = pd.to_datetime(taxi_data['pickup_datetime'],
                                               format='%Y-%m-%d %H:%M:%S')
 print(f'\nMissing data in train dataframe: {taxi_data.isna().sum().sum()}')
