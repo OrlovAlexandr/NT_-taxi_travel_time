@@ -1,4 +1,4 @@
-# NYC Taxi Travel Time Prediction
+# NYC Taxi Travel Time Prediction (MLOps training task)
 
 This project serves as a training task for MLOps, aiming to predict the travel time of New York City (NYC) taxis based on various features. The goal is to estimate the duration of a taxi trip using machine learning models and relevant data, allowing for more accurate planning and prediction of travel times.
 
